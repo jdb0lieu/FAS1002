@@ -1,0 +1,2 @@
+"0","library(ggplot2)"
+"0","(g <- ggplot(mpg) + aes(hwy, cty, color = class) + geom_point())"

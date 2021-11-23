@@ -1,0 +1,279 @@
+---
+title: "ggplot, Une introduction"
+subtitle: "⚔<br/>avec xaringan"
+author: "JD Beaulieu"
+institute: "UDM"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+# Script R qui contient les fonctions utiles au Rmarkdown
+
+# Fonction d'affichage des tableaux avec kable
+show_table <- function(dt){
+dt %>%
+  kbl() %>%
+  kable_styling(full_width = F)
+}
+# Fonction d'affichage des tableaux avec kable --plus petit
+show_table_sm <- function(dt){
+  dt %>%
+    kbl() %>%
+    kable_styling(full_width = F, font_size = 12)
+}
+# Fonction d'affichage de grands tableaux - head seulement
+show_head <- function(dt){
+    kable(head(dt)) %>%
+    kable_styling(full_width = F, font_size = 14)
+}
+# Fonction d'affichage de grands tableaux - head seulement
+show_head_sm <- function(dt){
+  kable(head(dt)) %>%
+    kable_styling(full_width = F, font_size = 10)
+}
+
+
+# Arrondir
+arrondir <- function(dt, variable, valeur){
+  dt %>% mutate_at(variable, round, valeur)
+}
+
+
+```
+background-image: url(https://miro.medium.com/max/640/0*0u-0nCZgkVqeK7CI.jpeg)
+
+
+
+
+
+class: center, 
+### Un exemple beaucoup trop compliqué de la puissance de ggplot
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
+
+---
+
+class: left, 
+# Un peu de mise en contexte
+
+
+###En base R, il est possible de faire des graphiques avec la fonction plot
+###Cependant, les possibilités sont limitées et les graphiques peu attrayants
+###Les packages ggplot et ggplot2 permettent de créer des graphiques beaucoup plus parlants
+###En fait, personne ne devrait utiliser la fonction plot pour réaliser des présentations en R
+
+---
+
+class: left, 
+# Un truc sympathique pour travailler dans le tydiverse
+###Comme on l'a vu dans les présentations de la semaine dernière, lorsque l'on charge à la chaîne les éléments du Tidyverse, il se peut que certaines erreurs se produisent
+###Le package Tydiverse permet d'installer tout l'univers sans se compliquer la vie, mais les conflits restent, comme le prouve la prochaine diapo.
+###Profitons-en aussi pour charger les Pingouins de Palmer, kabbleExtra et GGally (J'y reviendrai)
+
+---
+class: middle, center
+### La fonction utilisée
+```{r,warning=FALSE,message=FALSE, results = FALSE}
+library(tidyverse)
+library(palmerpenguins)
+library(kableExtra)
+library(GGally)
+
+```
+
+---
+#Première étape pour utiliser ggplot
+###Assigner la base de données et procéder a un vol intellectuel d'un jeu de fonctions car je ne connais pas les règles concernant les licenses afin de voir si tout semble plutôt tidy
+
+```{r}
+dt <- penguins
+show_head(dt)
+```
+---
+
+#Avantage indéniable pour les paresseux
+###Les packkage ggplot sont aussi moins regardants sur la qualité des données. Ils ometterons les na. 
+
+D'où l'appellation de {r,warning=FALSE,message=FALSE, results = FALSE} lorsque j'appelle les fonctions.
+
+Sinon, vos dispos se retrouveront avec ce message d'avertissement (warning):
+
+## Warning: Removed 2 rows containing missing values (geom_point).
+---
+
+class: center, 
+###Comparer la taille des nageoires avec le poids
+```{r, warning = FALSE, message=FALSE, results = FALSE, echo = FALSE}
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species,
+                 shape = species),
+             size = 2) +
+  scale_color_manual(values = c("midnightblue","royalblue","seagreen4")) 
+
+
+```
+---
+### La fonction utilisée
+{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species,
+                 shape = species),
+             size = 2) +
+  scale_color_manual(values = c("midnightblue","royalblue","seagreen4"))
+  
+### Explications
+data= -> la base de données
+
+aes(x=, y=,) -> les colones que vous voulez compare
+
+geom_point(aes(color = species,
+                 shape = species) -> mettre une couleur et une forme par espèce
+                 
+scale_color_manual(values = c("midnightblue","royalblue","seagreen4") -> si vous
+filez wild, vous pouvez utiliser la couleur de votre choix. J'ai tenté de trouver des couleurs qui ressemble au thème utilisé au travail... (pas une grande réussite)
+Une liste des couleurs pouvant être utilisées se trouve ici: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
+
+                 
+---
+class: center,
+###Comparer la taille des nageoires avec le poids en créant 3 classes selon l'espèce
+```{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+ggplot(penguins, aes(x = flipper_length_mm,
+                     y = body_mass_g)) +
+  geom_point(aes(color = sex)) +
+  scale_color_manual(values = c("royalblue","seagreen4"),
+                     na.translate = FALSE) +
+  facet_wrap(~species)
+```
+---
+### La fonction utilisée
+ggplot(penguins, aes(x = flipper_length_mm,
+                     y = body_mass_g)) +
+  geom_point(aes(color = sex)) +
+  scale_color_manual(values = c("royalblue","seagreen4"),
+                     na.translate = FALSE) +
+  facet_wrap(~species)
+
+
+###Explications
+On ajoute facet_wrap(~species) -> Cette fonction permet de créer 3 classes différentes selon l'espèce
+---
+class: center,
+### Explorer les distributions
+```{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+ggplot(data = penguins, aes(x = flipper_length_mm)) +
+  geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4"))
+```
+---
+### La fonction utilisée
+ggplot(data = penguins, aes(x = flipper_length_mm)) +
+  geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") +
+  scale_fill_manual(values = c(""midnightblue","royalblue","seagreen4"))
+  
+###Explications
+aes(x = flipper_length_mm)) -> la variable dont on veut examiner la distribution
+ geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") -> on
+ appelle la fonction histogramme, fill nous permet de préciser quelle variable on
+ veut analyse, alpha permet de préciser la grosseur.
+
+---
+class: center,
+### Créer des cartes de chaleur "heatmaps"
+```{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+ggp <- ggplot(penguins, aes(bill_length_mm, flipper_length_mm)) +                           
+  geom_tile(aes(fill = body_mass_g))
+ggp                                                               
+```
+
+---
+### La fonction utilisée
+ggp <- ggplot(penguins, aes(bill_length_mm, flipper_length_mm)) +                           
+  geom_tile(aes(fill = body_mass_g))
+ggp   
+
+###Explications
+penguins, aes(bill_length_mm, flipper_length_mm)) -> identifier les axes X et Y
+geom_tile(aes(fill = body_mass_g)) -> assigner la variable qui permettra de caractériser le poids des individus. 
+---
+class: center,
+#Faire des régressions linéaires
+
+```{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+
+
+bec_taille_long <- ggplot(data = penguins,
+                         aes(x = bill_length_mm,
+                             y = bill_depth_mm,
+                             group = species)) +
+  geom_point(aes(color = species,
+                 shape = species),
+             size = 3,
+             alpha = 0.8) +
+  geom_smooth(method = "lm", se = FALSE, aes(color = species)) +
+  theme_minimal() +
+  scale_color_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  labs(title = "Taille du bec des pingouins",
+       subtitle = "Taille du bec des pingouins pour les ésàces Adelie, Chinstrap et Gentoo à la station Palmer LTER",
+       x = "Longueur du bec (mm)",
+       y = "Profondeur du bec (mm)",
+       color = "Espèce",
+       shape = "Espèce") +
+  theme(legend.position = c(0.85, 0.15),
+        legend.background = element_rect(fill = "white", color = NA),
+        plot.title.position = "plot",
+        plot.caption = element_text(hjust = 0, face= "italic"),
+        plot.caption.position = "plot")
+
+bec_taille_long
+```
+---
+class: center,
+### Explorer les corrélations
+```{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+penguins %>%
+  select(species, body_mass_g, ends_with("_mm")) %>%
+  GGally::ggpairs(aes(color = species)) +
+  scale_colour_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4"))
+```
+---
+#### GGally
+L'allié de ggplot, ggally permet de pousser l'analyse de vos données en utilisant
+l'analyse de composant principal.
+#### La fonction utilisée
+penguins %>%
+  select(species, body_mass_g, ends_with("_mm")) %>%
+  GGally::ggpairs(aes(color = species)) +
+  scale_colour_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4"))
+####Explications
+select(species, body_mass_g, ends_with("_mm")) %>% -> permet de sélectionner les colonnes à comparer
+
+GGally::ggpairs(aes(color = species)) -> appelle la fonction ggpairs qui permet de réaliser l'analyse
+
+ scale_colour_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4")) - > permet un peu de fantasie en sélectionnant les couleurs qui pourront être utilisées pour la présentation
+---
+# Merci!
+
+Les diapos ont été construites avec l'aide de [**xaringan**](https://github.com/yihui/xaringan).
+
+The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](https://yihui.org/knitr/), and [R Markdown](https://rmarkdown.rstudio.com).
+
+La feuille de triche se trouve ici: https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf
+
+#### Références
+   Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer
+ Archipelago (Antarctica) penguin data. R package version 0.1.0.
+ https://allisonhorst.github.io/palmerpenguins/

@@ -1,0 +1,4 @@
+"0","DT::datatable("
+"0","  head(iris, 10),"
+"0","  fillContainer = FALSE, options = list(pageLength = 8)"
+"0",")"

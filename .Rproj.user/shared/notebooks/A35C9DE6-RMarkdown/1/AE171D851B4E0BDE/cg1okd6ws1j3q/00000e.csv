@@ -1,0 +1,3 @@
+"0","data_URL <- ""https://www.donneesquebec.ca/recherche/dataset/ab4da302-9945-44d6-9744-5cf7d60ad1b9/resource/380e9679-f379-4587-8d7e-f9c18cfa9e35/download/pf-mun-2020-2020.csv"""
+"0","dat <- read.csv(file = data_URL)"
+"0","View(dat)"

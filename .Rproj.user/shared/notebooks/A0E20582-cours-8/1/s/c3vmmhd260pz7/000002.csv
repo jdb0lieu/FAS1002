@@ -1,0 +1,3 @@
+"0","(df <- data.frame(x = letters,"
+"0","       `alpha bet` = 1:26,"
+"0","       z = sample(100, 26)))"

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ggplot, Une introduction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="JD Beaulieu" />
+    <meta name="date" content="2021-11-22" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ggplot, Une introduction
+## ⚔<br/>avec xaringan
+### JD Beaulieu
+### UDM
+### 2021-11-22
+
+---
+
+
+
+
+background-image: url(https://miro.medium.com/max/640/0*0u-0nCZgkVqeK7CI.jpeg)
+
+
+
+
+
+class: center, 
+### Un exemple beaucoup trop compliqué de la puissance de ggplot
+Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
+
+---
+
+class: left, 
+# Un peu de mise en contexte
+
+
+###En base R, il est possible de faire des graphiques avec la fonction plot
+###Cependant, les possibilités sont limitées et les graphiques peu attrayants
+###Les packages ggplot et ggplot2 permettent de créer des graphiques beaucoup plus parlants
+###En fait, personne ne devrait utiliser la fonction plot pour réaliser des présentations en R
+
+---
+
+class: left, 
+# Un truc sympathique pour travailler dans le tydiverse
+###Comme on l'a vu dans les présentations de la semaine dernière, lorsque l'on charge à la chaîne les éléments du Tidyverse, il se peut que certaines erreurs se produisent
+###Le package Tydiverse permet d'installer tout l'univers sans se compliquer la vie, mais les conflits restent, comme le prouve la prochaine diapo.
+###Profitons-en aussi pour charger les Pingouins de Palmer, kabbleExtra et GGally (J'y reviendrai)
+
+---
+class: middle, center
+### La fonction utilisée
+
+```r
+library(tidyverse)
+library(palmerpenguins)
+library(kableExtra)
+library(GGally)
+```
+
+---
+#Première étape pour utiliser ggplot
+###Assigner la base de données et procéder a un vol intellectuel d'un jeu de fonctions car je ne connais pas les règles concernant les licenses afin de voir si tout semble plutôt tidy
+
+
+```r
+dt &lt;- penguins
+show_head(dt)
+```
+
+&lt;table class="table" style="font-size: 14px; width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; species &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; island &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; bill_length_mm &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; bill_depth_mm &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; flipper_length_mm &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; body_mass_g &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; sex &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; year &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 181 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3750 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; male &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 186 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3800 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 195 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3250 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 193 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3450 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; female &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Torgersen &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 190 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3650 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; male &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+
+#Avantage indéniable pour les paresseux
+###Les packkage ggplot sont aussi moins regardants sur la qualité des données. Ils ometterons les na. 
+
+D'où l'appellation de {r,warning=FALSE,message=FALSE, results = FALSE} lorsque j'appelle les fonctions.
+
+Sinon, vos dispos se retrouveront avec ce message d'avertissement (warning):
+
+## Warning: Removed 2 rows containing missing values (geom_point).
+---
+
+class: center, 
+###Comparer la taille des nageoires avec le poids
+![](Travail_session_22-11-21_20h_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+---
+### La fonction utilisée
+{r, warning=FALSE,message=FALSE, results = FALSE, echo = FALSE}
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species,
+                 shape = species),
+             size = 2) +
+  scale_color_manual(values = c("midnightblue","royalblue","seagreen4"))
+  
+### Explications
+data= -&gt; la base de données
+
+aes(x=, y=,) -&gt; les colones que vous voulez compare
+
+geom_point(aes(color = species,
+                 shape = species) -&gt; mettre une couleur et une forme par espèce
+                 
+scale_color_manual(values = c("midnightblue","royalblue","seagreen4") -&gt; si vous
+filez wild, vous pouvez utiliser la couleur de votre choix. J'ai tenté de trouver des couleurs qui ressemble au thème utilisé au travail... (pas une grande réussite)
+Une liste des couleurs pouvant être utilisées se trouve ici: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
+
+                 
+---
+class: center,
+###Comparer la taille des nageoires avec le poids en créant 3 classes selon l'espèce
+![](Travail_session_22-11-21_20h_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+---
+### La fonction utilisée
+ggplot(penguins, aes(x = flipper_length_mm,
+                     y = body_mass_g)) +
+  geom_point(aes(color = sex)) +
+  scale_color_manual(values = c("royalblue","seagreen4"),
+                     na.translate = FALSE) +
+  facet_wrap(~species)
+
+
+###Explications
+On ajoute facet_wrap(~species) -&gt; Cette fonction permet de créer 3 classes différentes selon l'espèce
+---
+class: center,
+### Explorer les distributions
+![](Travail_session_22-11-21_20h_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+---
+### La fonction utilisée
+ggplot(data = penguins, aes(x = flipper_length_mm)) +
+  geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") +
+  scale_fill_manual(values = c(""midnightblue","royalblue","seagreen4"))
+  
+###Explications
+aes(x = flipper_length_mm)) -&gt; la variable dont on veut examiner la distribution
+ geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") -&gt; on
+ appelle la fonction histogramme, fill nous permet de préciser quelle variable on
+ veut analyse, alpha permet de préciser la grosseur.
+
+---
+class: center,
+### Créer des cartes de chaleur "heatmaps"
+![](Travail_session_22-11-21_20h_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+### La fonction utilisée
+ggp &lt;- ggplot(penguins, aes(bill_length_mm, flipper_length_mm)) +                           
+  geom_tile(aes(fill = body_mass_g))
+ggp   
+
+###Explications
+penguins, aes(bill_length_mm, flipper_length_mm)) -&gt; identifier les axes X et Y
+geom_tile(aes(fill = body_mass_g)) -&gt; assigner la variable qui permettra de caractériser le poids des individus. 
+---
+class: center,
+### Explorer les corrélations
+![](Travail_session_22-11-21_20h_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+---
+#### GGally
+L'allié de ggplot, ggally permet de pousser l'analyse de vos données en utilisant
+l'analyse de composant principal.
+#### La fonction utilisée
+penguins %&gt;%
+  select(species, body_mass_g, ends_with("_mm")) %&gt;%
+  GGally::ggpairs(aes(color = species)) +
+  scale_colour_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4"))
+####Explications
+select(species, body_mass_g, ends_with("_mm")) %&gt;% -&gt; permet de sélectionner les colonnes à comparer
+
+GGally::ggpairs(aes(color = species)) -&gt; appelle la fonction ggpairs qui permet de réaliser l'analyse
+
+ scale_colour_manual(values = c("midnightblue","royalblue","seagreen4")) +
+  scale_fill_manual(values = c("midnightblue","royalblue","seagreen4")) - &gt; permet un peu de fantasie en sélectionnant les couleurs qui pourront être utilisées pour la présentation
+---
+# Merci!
+
+Les diapos ont été construites avec l'aide de [**xaringan**](https://github.com/yihui/xaringan).
+
+The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](https://yihui.org/knitr/), and [R Markdown](https://rmarkdown.rstudio.com).
+
+La feuille de triche se trouve ici: https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf
+
+#### Références
+   Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer
+ Archipelago (Antarctica) penguin data. R package version 0.1.0.
+ https://allisonhorst.github.io/palmerpenguins/
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

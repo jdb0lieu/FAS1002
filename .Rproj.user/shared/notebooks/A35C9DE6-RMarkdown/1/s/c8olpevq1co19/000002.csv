@@ -1,0 +1,27 @@
+"0","#install.packages(""leaflet"")"
+"0","library(leaflet)"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"0","m <- leaflet(options = leafletOptions(minZoom = 10, maxZoom = 18))"
+"0","m <- addTiles(m)"
+"0","m <- setView(m, lng = -73.58781, lat = 45.50884, zoom = 11)"
+"0","m <- addProviderTiles(m, providers$CartoDB.DarkMatter)"
+"0",""
+"0","dat$COLOR <- sapply(dat$CATEGORIE, function(CATEGORIE) {"
+"0","  if(CATEGORIE == ""Infractions entrainant la mort"") {"
+"0","    ""red"""
+"0","  } else if(CATEGORIE == ""Introduction"") {"
+"0","    ""pink"""
+"0","  } else if(CATEGORIE == ""Méfait"") {"
+"0","    ""orange"""
+"0","  } else if(CATEGORIE == ""Vol dans / sur véhicule à moteur"") {"
+"0","    ""green"""
+"0","  } else if(CATEGORIE == ""Vol de véhicule à moteur"") {"
+"0","    ""blue"""
+"0","  } else {"
+"0","    ""black"""
+"0","  } })"
+"2","Error in lapply(X = X, FUN = FUN, ...) : object 'dat' not found
+"

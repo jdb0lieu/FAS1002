@@ -1,0 +1,3 @@
+"0","pop <- dat2$population"
+"0","indice <- dat2$IND0102"
+"0","plot(pop,indice)"

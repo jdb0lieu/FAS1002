@@ -1,0 +1,6 @@
+"0","library(xaringanthemer)"
+"0","style_duo_accent("
+"0","  primary_color = ""#1381B0"","
+"0","  secondary_color = ""#FF961C"","
+"0","  inverse_header_color = ""#FFFFFF"""
+"0",")"

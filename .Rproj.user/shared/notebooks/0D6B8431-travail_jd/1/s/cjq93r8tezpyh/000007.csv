@@ -1,0 +1,7 @@
+"0","library(ggplot2)"
+"0","ggplot(data = dat2) +"
+"0","  aes(x = indice, y = pop) + "
+"0","  geom_point( aes(color = classe_population, shape = classe_population) ) +"
+"0","  geom_smooth(method =lm)"
+"2","`geom_smooth()` using formula 'y ~ x'
+"

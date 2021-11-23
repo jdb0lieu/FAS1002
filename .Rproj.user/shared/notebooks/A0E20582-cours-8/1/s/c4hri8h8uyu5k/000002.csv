@@ -1,0 +1,6 @@
+"0","tribble("
+"0","  ~x, ~y, ~z,"
+"0","  #--|--|---- cette ligne/commentaire indique seulement la séparation entre le header et les valeurs "
+"0","  ""a"", 2, 3.6,"
+"0","  ""b"", 1, 8.5"
+"0",")"

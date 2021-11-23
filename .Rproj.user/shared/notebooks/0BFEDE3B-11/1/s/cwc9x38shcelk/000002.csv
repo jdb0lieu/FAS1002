@@ -1,0 +1,2 @@
+"0","g + xaringanthemer::theme_xaringan(text_font_size = 16, title_font_size = 18) +"
+"0","  ggtitle(""A Plot About Cars"")"
